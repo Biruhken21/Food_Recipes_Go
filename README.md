@@ -1,18 +1,35 @@
-Food Recipes API - GraphQL with Hasura
-A modern recipe management platform featuring a Hasura GraphQL API with Go backend microservices and Nuxt.js frontend. This architecture provides real-time capabilities, strong typing, and excellent developer experience.
+# 🍳 Food Recipes - Modern Recipe Management Platform
 
-🚀 Features
-Core Architecture
-Hasura GraphQL Engine: Instant GraphQL API over PostgreSQL
+A **full-stack recipe management application** with **Hasura GraphQL API**, **Go backend services**, and **Nuxt.js frontend**
 
-Go Microservices: Backend services for authentication and business logic
+## 🚀 **Key Features**
 
-Nuxt.js Frontend: Modern Vue.js framework with SSR
+### **Core Architecture**
+- ⚡ **Hasura GraphQL Engine** - Instant GraphQL API with real-time subscriptions
+- 🔐 **Go Microservices** - High-performance backend services
+- 🎨 **Nuxt.js Frontend** - Modern Vue.js with SSR and TypeScript
+- 📊 **PostgreSQL** - Robust relational database
+- 🔒 **JWT Authentication** - Secure auth with custom Hasura claims
 
-Real-time Subscriptions: Live updates for recipes and favorites
+## 🏗️ **Technology Stack**
 
-JWT Authentication: Secure authentication with custom claims
+### **GraphQL Layer**
+- **Hasura** - Auto-generated GraphQL API
+- **GraphQL** - Query language for APIs
+- **PostgreSQL** - Primary database
+- **JWT** - Token-based authentication
 
-PostgreSQL: Robust relational database
+### **Backend (Go)**
+- **Go 1.20+** - High-performance language
+- **Gorilla Mux** - HTTP router
+- **JWT (golang-jwt/jwt)** - Token handling
+- **Bcrypt** - Password hashing
 
-Type-safe GraphQL: Auto-generated TypeScript types
+### **Frontend (Nuxt.js)**
+- **Nuxt 3** - Vue.js framework with SSR
+- **Vue 3** - Progressive JavaScript
+- **TypeScript** - Type safety
+- **Apollo Client** - GraphQL client
+- **GraphQL Code Generator** - Auto-generated types
+
+## 📁 **Project Structure**
