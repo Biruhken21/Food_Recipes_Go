@@ -3,8 +3,6 @@ A full-stack recipe management application built with Go (Golang) backend and Nu
 
 🚀 Features
 Backend (Go)
-High-performance API: Built with Go for speed and efficiency
-
 JWT Authentication: Secure token-based authentication
 
 PostgreSQL Database: Relational database for structured data
