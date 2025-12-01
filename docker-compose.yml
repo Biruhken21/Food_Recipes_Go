@@ -1,0 +1,84 @@
+services:
+  postgres:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ayana
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  hasura:
+    image: hasura/graphql-engine:latest
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:ayana@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ADMIN_SECRET: myadminsecret
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anonymous
+      HASURA_GRAPHQL_JWT_SECRET: >
+        {
+          "type": "HS256",
+          "key": "supersecretkeythatislongenough1234567890",
+          "claims_namespace": "https://hasura.io/jwt/claims",
+          "claims_format": "json"
+        }
+      HASURA_GRAPHQL_ENABLE_REMOTE_SCHEMA_PERMISSIONS: "true"
+    volumes:
+      - ./hasura/metadata:/metadata
+      - ./hasura/migrations:/hasura-migrations
+      - ./hasura/seeds:/hasura-seeds
+
+  auth-service:
+    build:
+      context: ./backend/go
+    container_name: recipe-auth
+    restart: always
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgres://postgres:ayana@postgres:5432/postgres?sslmode=disable
+      JWT_SECRET: supersecretkeythatislongenough1234567890
+      JWT_ISSUER: recipe-auth
+      JWT_AUDIENCE: hasura
+      UPLOAD_DIR: /uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./uploads:/uploads
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: recipe-frontend
+    restart: always
+    ports:
+      - "3001:3000" # Nuxt runs inside container on 3000, exposed as 3001 on host
+    depends_on:
+      - hasura
+      - auth-service
+    environment:
+      API_URL: http://hasura:8080/v1/graphql
+      AUTH_SERVICE_URL: http://auth-service:3000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
